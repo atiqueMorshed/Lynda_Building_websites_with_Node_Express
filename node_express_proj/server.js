@@ -29,7 +29,19 @@ app.use(
   })
 );
 
+app.locals.siteName = 'Roux Meetups'; //This variable is available to all the template files.
+
+app.use(async (request, response, next) => {
+  try {
+    const names = await speakersService.getNames();
+    response.locals.speakerNames = names;
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 // Global variables
 const PORT = 3000;
 
-app.listen(3000, () => console.log(`Server is listening on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
