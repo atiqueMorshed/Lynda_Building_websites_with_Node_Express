@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cookieSession = require('cookie-session');
+const createError = require('http-errors');
 
 const routes = require('./routes');
 const FeedbackService = require('./services/FeedbackService');
@@ -33,6 +34,7 @@ app.use(
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 app.use(express.static('static'));
+
 app.use(
   '/',
   routes({
@@ -45,8 +47,19 @@ app.use(
     // } we are sending class instance and only speakersService will also work.
   })
 );
+app.use((request, response, next) => {
+  return next(createError(404, 'Page not found.(Custom error server.js L51)'));
+});
+
+app.use((err, request, response, next) => {
+  const status = err.status || 500;
+  response.locals.message = err.message;
+  response.locals.status = status;
+  response.status(status);
+  response.render('error');
+});
 
 // Global variables
-const PORT = 3001;
+const PORT = 3000;
 
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
