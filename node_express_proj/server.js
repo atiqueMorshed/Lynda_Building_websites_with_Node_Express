@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cookieSession = require('cookie-session');
+
 const routes = require('./routes');
 const FeedbackService = require('./services/FeedbackService');
 const SpeakersService = require('./services/SpeakerService');
@@ -11,6 +12,18 @@ const speakersService = new SpeakersService('./data/speakers.json');
 const app = express();
 
 app.set('trust proxy', 1);
+
+app.locals.siteName = 'Roux Meetups'; //This variable is available to all the template files.
+
+app.use(async (request, response, next) => {
+  try {
+    const names = await speakersService.getNames();
+    response.locals.speakerNames = names;
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
 app.use(
   cookieSession({
     name: 'session',
@@ -25,23 +38,15 @@ app.use(
   routes({
     feedbackService,
     speakersService,
-    // Same as speakersService: speakersService, we are sending class instance and only speakersService will also work.
+    // Same as
+    // {
+    // speakersService: speakersService,
+    // feedbackService: feedbackService
+    // } we are sending class instance and only speakersService will also work.
   })
 );
 
-app.locals.siteName = 'Roux Meetups'; //This variable is available to all the template files.
-
-app.use(async (request, response, next) => {
-  try {
-    const names = await speakersService.getNames();
-    response.locals.speakerNames = names;
-    return next();
-  } catch (err) {
-    return next(err);
-  }
-});
-
 // Global variables
-const PORT = 3000;
+const PORT = 3001;
 
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
