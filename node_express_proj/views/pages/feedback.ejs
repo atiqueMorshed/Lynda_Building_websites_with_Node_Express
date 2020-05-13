@@ -4,16 +4,17 @@
       <div class="maincontent">
         <h1>Send us feedback</h1>
 
-        <% if(locals.errors) { %>
-        <div class="alert alert-danger">
-          <%errors.forEach(err => {%>
-          <li><%=err.msg%></li>
-          <%});%>
+        <div class="feedback-status">
+          <% if(locals.errors) { %>
+          <div class="alert alert-danger">
+            <%errors.forEach(err => {%>
+            <li><%=err.msg%></li>
+            <%});%>
+          </div>
+          <%} else if(locals.success) {%>
+          <div class="alert alert-success"><%=success%></div>
+          <%}%>
         </div>
-        <%} else if(locals.success) {%>
-        <div class="alert alert-success"><%=success%></div>
-        <%}%>
-
         <form class="feedback-form" action="/feedback" method="POST">
           <div class="form-group">
             <label for="feedback-form-name">Name</label>
