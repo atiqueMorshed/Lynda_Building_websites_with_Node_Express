@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
 const cookieSession = require('cookie-session');
 const createError = require('http-errors');
@@ -31,6 +32,7 @@ app.use(
     keys: ['y893dhf6qo3r32rh8qr9938rqr6qo39rq9r', 'duq2h3879yr32rrhq56iuohr23r89hq3829rh82r'],
   })
 );
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 app.use(express.static('static'));

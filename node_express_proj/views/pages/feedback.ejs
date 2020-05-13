@@ -3,10 +3,22 @@
     <div class="col-md-4">
       <div class="maincontent">
         <h1>Send us feedback</h1>
-        <form class="feedback-form">
+
+        <% if(locals.errors) { %>
+        <div class="alert alert-danger">
+          <%errors.forEach(err => {%>
+          <li><%=err.msg%></li>
+          <%});%>
+        </div>
+        <%} else if(locals.success) {%>
+        <div class="alert alert-success"><%=success%></div>
+        <%}%>
+
+        <form class="feedback-form" action="/feedback" method="POST">
           <div class="form-group">
             <label for="feedback-form-name">Name</label>
             <input
+              name="name"
               type="text"
               class="form-control"
               id="feedback-form-name"
@@ -16,6 +28,7 @@
           <div class="form-group">
             <label for="feedback-form-email">E-Mail</label>
             <input
+              name="email"
               type="text"
               class="form-control"
               id="feedback-form-email"
@@ -25,6 +38,7 @@
           <div class="form-group">
             <label for="feedback-form-title">Title</label>
             <input
+              name="title"
               type="text"
               class="form-control"
               id="feedback-form-title"
@@ -34,6 +48,7 @@
           <div class="form-group">
             <label for="feedback-form-message">Message</label>
             <textarea
+              name="message"
               type="text"
               placeholder="Enter your message, then hit the submit button"
               class="form-control"
